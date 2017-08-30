@@ -16,6 +16,9 @@ class Viewport:
         self._rect = Rect(0, 0, 0, 0)
         self.limits = [None, None, None, None]
 
+        # used to centre the viewport on a gameObject's position
+        self.track = None
+
     def setPosition(self, xOrVec, y=None):
         """ Set the position of the viewport, in global co-ords. _
         Can supply x and y, or a Vector """
@@ -39,6 +42,16 @@ class Viewport:
 
         if height:
             self._rect.height = height
+
+    def getRect(self):
+        """ Returns a rect representing the viewport """
+
+        return self._rect
+
+    def inView(self, rect):
+        """ Checks if any part of a rect is in the viewport """
+
+        return self.getRect().colliderect(rect)
 
     def setLimit(self, index, limit):
         """ Sets the limits that the viewport can move in global co-ords
@@ -68,8 +81,11 @@ class Viewport:
                 self._rect.y = self.limits[LimitIndex.Y_MIN.value]
 
         if (self.limits[LimitIndex.Y_MAX.value]):
-            if (self._rect.bottomright[1] < self.limits[LimitIndex.Y_MAX.value]):
+            if (self._rect.bottomright[1] > self.limits[LimitIndex.Y_MAX.value]):
                 self._rect.y = self.limits[LimitIndex.Y_MAX.value]
+
+    def update(self):
+        self.checkLimits()
 
 
 # unit testing
@@ -134,6 +150,28 @@ class testViewport(unittest.TestCase):
         vp.checkLimits()
         self.assertEqual(vp._rect.x, 1001)
         self.assertEqual(vp._rect.y, 2002)
+
+    def test_getRect(self):
+        vp = Viewport()
+        vp.setPosition(101, 202)
+        vp.setDimensions(303, 404)
+
+        rect = vp.getRect()
+        self.assertEqual(rect.x, 101)
+        self.assertEqual(rect.y, 202)
+        self.assertEqual(rect.width, 303)
+        self.assertEqual(rect.height, 404)
+
+    def test_inView(self):
+        vp = Viewport()
+        vp.setPosition(0, 0)
+        vp.setDimensions(1000, 1000)
+
+        rect = Rect(100, 100, 100, 100)
+        self.assertTrue(vp.inView(rect))
+
+        rect = Rect(2000, 2000, 100, 100)
+        self.assertFalse(vp.inView(rect))
 
 if __name__ == "__main__":
     unittest.main()
