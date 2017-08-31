@@ -76,8 +76,12 @@ class Viewport:
         self.checkLimits()
         
     def draw(self, sprite):
+        # get a vector of the local position of the sprite
         local_vec = sprite.getPosition() - self.getPosition()
-        self.screen.blit(sprite.getImage(), 
+        
+        # draw the sprite's image to the local position
+        self.screen.blit(sprite.getImage(), (local_vec.x, local_vec.y))
+        
     def getRect(self):
         """ Returns a rect representing the viewport """
 
