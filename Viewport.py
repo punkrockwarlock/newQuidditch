@@ -12,9 +12,13 @@ class LimitIndex(Enum):
 
 
 class Viewport:
-    def __init__(self):
+    def __init__(self, screen):
+        self.screen = screen
         self._rect = Rect(0, 0, 0, 0)
         self.limits = [None, None, None, None]
+        
+        # set the viewport dimensions to screen dimensions
+        self.setDimensions(self.screen.getWidth(), self.screen.getHeight())
 
         # used to centre the viewport on a gameObject's position
         self.track = None
@@ -43,22 +47,6 @@ class Viewport:
         if height:
             self._rect.height = height
 
-    def getRect(self):
-        """ Returns a rect representing the viewport """
-
-        return self._rect
-
-    def inView(self, rect):
-        """ Checks if any part of a rect is in the viewport """
-
-        return self.getRect().colliderect(rect)
-
-    def setLimit(self, index, limit):
-        """ Sets the limits that the viewport can move in global co-ords
-
-            'index' can be any of enum:
-            LimitIndex.X_MIN
-            LimitIndex.X_MAX
             LimitIndex.Y_MIN
             LimitIndex.Y_MAX"""
 
@@ -86,6 +74,26 @@ class Viewport:
 
     def update(self):
         self.checkLimits()
+        
+    def draw(self, sprite):
+        local_vec = sprite.getPosition() - self.getPosition()
+        self.screen.blit(sprite.getImage(), 
+    def getRect(self):
+        """ Returns a rect representing the viewport """
+
+        return self._rect
+
+    def inView(self, rect):
+        """ Checks if any part of a rect is in the viewport """
+
+        return self.getRect().colliderect(rect)
+
+    def setLimit(self, index, limit):
+        """ Sets the limits that the viewport can move in global co-ords
+
+            'index' can be any of enum:
+            LimitIndex.X_MIN
+            LimitIndex.X_MAXsprite.getPosition() 
 
 
 # unit testing
