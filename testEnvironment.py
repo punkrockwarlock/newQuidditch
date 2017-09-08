@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
+
 import pygame
 import sys
-from pygame.locals import *
+import pygame.locals as locals
 from Viewport import Viewport
 from Vector import Vec2d
 
@@ -8,7 +10,7 @@ from Vector import Vec2d
 class testSprite(pygame.sprite.Sprite):
     def __init__(self, w, h):
         self.image = pygame.Surface((w, h))
-        self.image.fill(Color(255, 0, 0))
+        self.image.fill(locals.Color(255, 0, 0))
 
     def getImage(self):
         return self.image
@@ -28,26 +30,30 @@ sprite3 = testSprite(5, 800)
 running = True
 while running:
     for event in pygame.event.get():
-        if (event.type == QUIT):
+        if (event.type == locals.QUIT):
             pygame.quit()
             sys.exit()
-        if (event.type == KEYDOWN):
-            if (event.key == K_a):
-                viewport.setPosition(viewport.getPosition() + Vec2d(-20, 0))
+        if (event.type == locals.KEYDOWN):
+            if (event.key == locals.K_ESCAPE):
+                pygame.quit()
+                sys.exit()
 
-            if (event.key == K_d):
-                viewport.setPosition(viewport.getPosition() + Vec2d(20, 0))
+            if (event.key == locals.K_a):
+                viewport.move(Vec2d(-20, 0))
 
-            if (event.key == K_s):
-                viewport.setPosition(viewport.getPosition() + Vec2d(0, 20))
+            if (event.key == locals.K_d):
+                viewport.move(Vec2d(20, 0))
 
-            if (event.key == K_w):
-                viewport.setPosition(viewport.getPosition() + Vec2d(0, -20))
+            if (event.key == locals.K_s):
+                viewport.move(Vec2d(0, 20))
 
-            if (event.key == K_RETURN):
+            if (event.key == locals.K_w):
+                viewport.move(Vec2d(0, -20))
+
+            if (event.key == locals.K_RETURN):
                 print viewport.getRect()
 
-    SCREEN.fill(Color(255, 255, 255))
+    SCREEN.fill(locals.Color(255, 255, 255))
 
     viewport.draw(sprite.getImage(), Vec2d(100, 100))
     viewport.draw(sprite2.getImage(), Vec2d(0, 995))
