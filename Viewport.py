@@ -1,3 +1,5 @@
+# -*- coding: utf-8 -*-
+
 import unittest
 from pygame import Rect
 from Vector import Vec2d
@@ -5,11 +7,12 @@ from Vector import Vec2d
 
 class Viewport:
     def __init__(self, screen):
+        self.screen = screen
         self._rect = Rect(0, 0, 0, 0)
         self.limits = [None, None, None, None]
 
         # set the viewport dimensions to screen dimensions       
-        self.setDimensions(self.screen.getWidth(), self.screen.getHeight())
+        self.setDimensions(self.screen.get_width(), self.screen.get_height())
 
         # used to centre the viewport on a gameObject's position
         self.track = None
@@ -51,7 +54,7 @@ class Viewport:
     def setLimit(self, index, limit):
         """ Sets the limits that the viewport can move in global co-ords """
 
-        self.limits[index.value] = limit
+        self.limits[index] = limit
 
     def checkLimits(self):
         """ Checks if the current viewport position is beyond bounds """
@@ -63,7 +66,7 @@ class Viewport:
 
         if (self.limits[1]):
             if (self._rect.topright[0] > self.limits[1]):
-                self._rect.x = self.limits[1]
+                self._rect.x = self.limits[1] - self._rect.width
 
         if (self.limits[2]):
             if (pos.y < self.limits[2]):
@@ -71,17 +74,17 @@ class Viewport:
 
         if (self.limits[3]):
             if (self._rect.bottomright[1] > self.limits[3]):
-                self._rect.y = self.limits[3]
+                self._rect.y = self.limits[3] - self._rect.height
 
     def update(self):
         self.checkLimits()
 
-    def draw(self, sprite):
+    def draw(self, image, position):
         # get a vector of the local position of the sprite
-        local_vec = sprite.getPosition() - self.getPosition()
+        local_vec = position - self.getPosition()
 
         # draw the sprite's image to the local position
-        self.screen.blit(sprite.getImage(), (local_vec.x, local_vec.y))
+        self.screen.blit(image, (local_vec.x, local_vec.y))
 
 
 # unit testing
